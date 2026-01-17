@@ -264,7 +264,7 @@ export default function AdminPage() {
                           <input
                             type="file"
                             accept="audio/*"
-                            id={`audio-${missao.id}`}
+                            id={`audio-upload-${missao.id}`}
                             className="hidden"
                             onChange={(e) => {
                               const file = e.target.files?.[0];
@@ -273,7 +273,7 @@ export default function AdminPage() {
                             disabled={uploadingAudio === missao.id}
                           />
                           <label
-                            htmlFor={`audio-${missao.id}`}
+                            htmlFor={`audio-upload-${missao.id}`}
                             className={`px-4 py-2 rounded-lg font-semibold transition-all cursor-pointer flex items-center gap-2 ${
                               missao.audio_url
                                 ? 'bg-green-500/20 text-green-400 border border-green-500/30 hover:bg-green-500/30'

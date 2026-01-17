@@ -12,12 +12,21 @@ export default function MissoesPage() {
   const [busca, setBusca] = useState('');
   const [missoes, setMissoes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    loadMissoes();
+    setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (mounted) {
+      loadMissoes();
+    }
+  }, [mounted]);
+
   const loadMissoes = async () => {
+    if (!mounted) return;
+    
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -48,7 +57,7 @@ export default function MissoesPage() {
   const totalXP = missoes.reduce((acc, m) => acc + m.xp, 0);
   const totalMoedas = missoes.reduce((acc, m) => acc + m.moedas, 0);
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-blue-400 animate-spin" />
@@ -142,7 +151,7 @@ export default function MissoesPage() {
               const gargaloInfo = GARGALO_INFO[missao.gargalo as Gargalo];
               return (
                 <Link
-                  key={`missao-list-${missao.id}`}
+                  key={`missao-card-${missao.id}`}
                   href={`/missao/${missao.id}`}
                   className="block group"
                 >

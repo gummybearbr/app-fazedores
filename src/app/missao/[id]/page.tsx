@@ -27,6 +27,7 @@ export default function MissaoPage() {
   const [missao, setMissao] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   const [respostas, setRespostas] = useState<{ [key: number]: 'A' | 'B' | 'C' | null }>({
     0: null,
@@ -41,11 +42,19 @@ export default function MissaoPage() {
   });
 
   useEffect(() => {
-    loadMissao();
-    initUser();
-  }, [params.id]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && params.id) {
+      loadMissao();
+      initUser();
+    }
+  }, [params.id, mounted]);
 
   const initUser = async () => {
+    if (!mounted) return;
+    
     // Simular usuário demo (em produção, usar autenticação real)
     const demoEmail = 'usuario@demo.com';
     const result = await getOrCreateUser(demoEmail, 'Usuário Demo');
@@ -55,6 +64,8 @@ export default function MissaoPage() {
   };
 
   const loadMissao = async () => {
+    if (!mounted) return;
+    
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -72,7 +83,7 @@ export default function MissaoPage() {
     }
   };
 
-  if (loading) {
+  if (!mounted || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
         <Loader2 className="w-12 h-12 text-blue-400 animate-spin" />
