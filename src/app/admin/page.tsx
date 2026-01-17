@@ -23,12 +23,21 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [uploadingAudio, setUploadingAudio] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    loadData();
-  }, [activeTab]);
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      loadData();
+    }
+  }, [activeTab, mounted]);
 
   const loadData = async () => {
+    if (!mounted) return;
+    
     setLoading(true);
     try {
       if (activeTab === 'missoes') {
@@ -121,6 +130,14 @@ export default function AdminPage() {
       alert('❌ Erro ao atualizar missão');
     }
   };
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-blue-400 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
